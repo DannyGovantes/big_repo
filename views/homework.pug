@@ -1,0 +1,58 @@
+extends base
+
+block content
+    section.section-header
+        .header__hero
+            .header__hero-overlay &nbsp;
+
+            .heading-box
+                h1.heading-primary
+                    span= `${homework.name}`
+                .heading-box__group
+                    .heading-box__detail
+                        span.heading-box__text= `Creada: ${homework.createdAt.toLocaleDateString("en-us")}`
+                    .heading-box__detail
+                        svg.heading-box__icon
+                        span.heading-box__text= `Se entrega: ${homework.timeLimit.toLocaleDateString("en-us")}`
+
+    section.section-description
+        .overview-box
+            div
+                .overview-box__group
+                h2.heading-secondary.ma-bt-lg Detalles  
+
+                .overview-box__detail
+                    span.overview-box__label= homework.name
+                    span.overview-box__text= `Fecha de creación: \n ${homework.createdAt.toLocaleDateString("en-us")} ${homework.createdAt.toLocaleTimeString('en-US',{hour: '2-digit',minute:'2-digit'})}`
+                    span.overview-box__text= `Fecha de entrega:\n ${homework.timeLimit.toLocaleDateString("en-us")} ${homework.timeLimit.toLocaleTimeString('en-US',{hour: '2-digit',minute:'2-digit'})}`
+
+        .description-box
+            h2.heading-secondary.ma-bt-lg= `Acerca de ${homework.name}`
+            - const parapraphs = homework.description.split('\n');
+            each p in parapraphs
+                p.description__text= p
+            if (user.role === 'student')
+                h2.heading-secondary.ma-bt-md Subir tu tarea
+                    form.form.form--file
+                        .form__group.form__photo-upload
+                            label.form__label(for='summary') Acerca de la tarea 
+                            input#summary.form__input(type='summary', placeholder='Sumario')
+                        .form__group.ma-bt-md
+                            label.form__label(for='homework') Tarea asignada 
+                            input#homework.form__input(type='homework', value=`${homework.slug}` readonly)
+                        .form__group.ma-bt-md
+                            input.form__upload(type='file', accept='*', id='doc', name='doc')
+                            label(for='doc') Elegir archivo
+                        .form__group.right
+                            button.btn.btn--small.btn--green Subir Tarea
+    
+    if (user.role === 'profesor')
+        section.section-description
+                .description-box
+                    h2.heading-secondary.ma-bt-lg Entregada por
+                    each students in homework.deliveredBy
+                        .overview-box__detail
+                             span.overview-box__label= students.name
+                             if(students.homeworks.includes(homework.id))
+                                a.overview-box__label(href=`/docs/homework/${students.homeworks[students.homeworks.indexOf(homework.id)]}.pdf` download) Descarga Tarea
+                    

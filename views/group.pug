@@ -1,0 +1,108 @@
+extends base
+
+block content
+
+        section.section-header
+            .header__hero
+                .header__hero-overlay &nbsp;
+
+                .heading-box
+                    h1.heading-primary
+                        span= `${group .name}`
+                    .heading-box__group
+                        .heading-box__detail
+                            span.heading-box__text= `${group.sequence}`
+                        .heading-box__detail
+                            svg.heading-box__icon
+                            span.heading-box__text= group.school
+
+        if (user)
+
+            if (profesors.includes(user.id)|| students.includes(user.id))
+
+                section.section-description
+                
+                    .overview-box
+                        div
+                            .overview-box__group
+                                h2.heading-secondary.ma-bt-lg Tareas 
+                                if (group.homework.length <= 0)
+                                    .overview-box__detail No hay tareas asignadas.
+                                else 
+                                    each homework in group.homework
+                                        .overview-box__detail
+                                            span.overview-box__label= homework.name
+                                            span.overview-box__text= `Fecha de creación: \n ${homework.createdAt.toLocaleDateString("en-us")} ${homework.createdAt.toLocaleTimeString('en-US',{hour: '2-digit',minute:'2-digit'})}`
+                                            span.overview-box__text= `Fecha de entrega:\n ${homework.timeLimit.toLocaleDateString("en-us")} ${homework.timeLimit.toLocaleTimeString('en-US',{hour: '2-digit',minute:'2-digit'})}`
+                                            a.btn.btn--green.btn--small(href=`/group/${group.slug}/homework/${homework.slug}`) ver
+                    
+                    
+                    .description-box
+                        h2.heading-secondary.ma-bt-lg= `Acerca de ${group.name}`
+                        - const parapraphs = group.description.split('\n');
+                        each p in parapraphs
+                            p.description__text= p
+                        each profesor in group.profesor 
+                            p.description__text= `Responsable(s): ${profesor.name}`
+                            p.description__text= `Email: ${profesor.email}`
+
+                if (user.role ==='profesor')
+                    section.section-description
+                        .description-box 
+                            .login-form
+                                h2.heading-secondary.ma-bt-lg Crear Tarea
+                                form.form.form--homework
+                                    .form__group
+                                        label.form__label(for='name') Nombre de la tarea 
+                                        input#name.form__input(type='text', placeholder='nombre de tarea', required)
+                                    .form__group.ma-bt-md
+                                        label.form__label(for='description') Descripción
+                                        input#description.form__input(type='text', placeholder='descripción', required)
+                                    .form__group.ma-bt-md
+                                        label.form__label(for='timeLimit') Fecha entrega
+                                        input#timeLimit.form__input(type='date', required)
+                                    .form__group.ma-bt-md
+                                        label.form__label(for='group') Grupo
+                                        input#group.form__input(type='text', readonly,value=`${group.slug}`)
+                                    .form__group
+                                        button.btn.btn--green Crear tarea
+
+                        .overview-box
+                            div
+                                .overview-box__group
+                                    h2.heading-secondary.ma-bt-lg Alumnos 
+                                    if (group.students.length <= 0 )
+                                        .overview-box__detail
+                                            span.overview-box__label No hay estudiantes por el momento  
+                                    else
+                                        each student in group.students
+                                            .overview-box__detail
+                                                
+                                                span.overview-box__label= student.name
+                                    
+                                    h2.heading-secondary.ma-bt-lg Solicitudes para este grupo 
+                                    if (group.requests.length <= 0)
+                                        .overview-box__detail
+                                            span.overview-box__label No hay solicitudes por el momento 
+                                    else 
+                                        each request in group.requests
+                                            .overview-box__detail
+                                                span.overview-box__label= request.name
+                                                    button#requestButton.btn.btn--green.btn--small.request-button(value=`${request.id} ${group.slug}`) Aceptar
+
+            else 
+                .error__title
+                    h2.heading-secondary.heading-secondary--error No perteneces a este grupo.   
+                    h2.error__emoji Inicia sesión y solicita unirte aquí
+                    button#request.nav__el.nav__el--cta.request-access(value=`${group.slug}`) Unirme
+
+        else 
+            .error__title
+                h2.heading-secondary.heading-secondary--error Inicia sesión para continuar
+                h2.error__emoji 😢 🤯 
+
+                    
+
+
+
+

@@ -1,0 +1,36 @@
+extends base
+
+block content
+    main.main
+        if (groups.length > 0)
+            .card-container
+            
+                each group in groups
+                    .card
+                        .card__header
+                            .card__picture
+                                .card__picture-overlay &nbsp;
+                            h3.heading-tertirary
+                                span= group.name
+
+                        .card__details
+                            h4.card__sub-heading= `${group.school} ${group.sequence}`
+                            .card__data
+                                span= group.description
+
+                        .card__footer
+                            p.card__ratings
+                                a.btn.btn--green.btn--small(href=`/group/${group.slug}`) Ver
+                                if (user.role==='profesor')
+                                    div.card__ratings.tooltip
+                                        button.btn.btn--green.btn--small.share-button(value=`http://localhost:4000/group/${group.slug}`) Compartir
+                                        span#myTooltip.tooltiptext Copiar al portapapeles
+                                    
+
+        else
+            .error
+                .error__title
+                h2.heading-secondary.heading-secondary--error No tienes grupos por el momento  
+                h2.error__emoji 😢 🤯     
+
+        

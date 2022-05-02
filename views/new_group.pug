@@ -1,0 +1,21 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      h2.heading-secondary.ma-bt-lg Crear Grupo
+      form.form.form--group
+        .form__group
+          label.form__label(for='name') name 
+          input#name.form__input(type='text', placeholder='Grupo', required)
+        .form__group.ma-bt-md
+          label.form__label(for='school') Escuela
+          input#school.form__input(type='text', placeholder='Escuela', required)
+        .form__group.ma-bt-md
+          label.form__label(for='sequence') Secuencia
+          input#sequence.form__input(type='text', placeholder='Secuencia', required)
+        .form__group.ma-bt-md
+          label.form__label(for='description') Descripción
+          input#description.form__input(type='text', placeholder='Descripción', required)
+        .form__group
+          button.btn.btn--green Crear Grupo
